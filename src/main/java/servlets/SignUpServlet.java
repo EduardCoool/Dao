@@ -1,8 +1,7 @@
 package servlets;
 
-import dbService.DBException;
-import dbService.DBService;
 import dbService.UsersDataSet;
+import service.UserServiceImpl;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -10,10 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class SignUpServlet extends HttpServlet {
-    private final DBService dbService;
+    private final UserServiceImpl userService;
 
-    public SignUpServlet(DBService dbService) {
-        this.dbService = dbService;
+    public SignUpServlet(UserServiceImpl userService) {
+        this.userService = userService;
     }
 
     public void doPost(HttpServletRequest request,
@@ -35,16 +34,16 @@ public class SignUpServlet extends HttpServlet {
         UsersDataSet usersDataSet;
 
         try {
-            usersDataSet = dbService.getUser(login);
-        } catch (DBException e) {
+            usersDataSet = userService.getUser(login);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
         if (usersDataSet == null) {
 
             try {
-                dbService.addUser(login, password);
-            } catch (DBException e) {
+                userService.saveUser(login, password);
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
 
@@ -55,6 +54,5 @@ public class SignUpServlet extends HttpServlet {
             response.getWriter().println("the user exists");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
-
     }
 }

@@ -1,8 +1,7 @@
 package servlets;
 
-import dbService.DBException;
-import dbService.DBService;
 import dbService.UsersDataSet;
+import service.UserServiceImpl;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -10,10 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class SignInServlet extends HttpServlet {
-    private final DBService dbService;
+    private final UserServiceImpl userService;
 
-    public SignInServlet(DBService dbService) {
-        this.dbService = dbService;
+    public SignInServlet(UserServiceImpl userService) {
+        this.userService = userService;
     }
 
     public void doGet(HttpServletRequest request,
@@ -39,8 +38,8 @@ public class SignInServlet extends HttpServlet {
 
         UsersDataSet usersDataSet;
         try {
-            usersDataSet = dbService.getUser(login);
-        } catch (DBException e) {
+            usersDataSet = userService.getUser(login);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
